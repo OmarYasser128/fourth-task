@@ -27,13 +27,16 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   bool isObscure = true;
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final GlobalKey<FormState> formKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.all(0),
+        child: Form(
+          key: formKey,
           child: Column(
             children: [
               Container(
@@ -85,7 +88,14 @@ class _MyHomePageState extends State<MyHomePage> {
               SizedBox(height: 20),
               Padding(
                 padding: EdgeInsets.all(10.0),
-                child: TextField(
+                child: TextFormField(
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "this field is required";
+                    }
+                    return null;
+                  },
+                  controller: emailController,
                   decoration: InputDecoration(
                     hintText: "Enter your email",
                     hintStyle: TextStyle(color: Colors.black, fontSize: 20),
@@ -102,7 +112,14 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               Padding(
                 padding: EdgeInsets.all(10.0),
-                child: TextField(
+                child: TextFormField(
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "this field is required";
+                    }
+                    return null;
+                  },
+                  controller: passwordController,
                   obscureText: isObscure,
                   obscuringCharacter: "*",
                   decoration: InputDecoration(
@@ -155,13 +172,20 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   child: Align(
                     alignment: Alignment.center,
-                    child: Text(
-                      "Login",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold),
-                    ),
+                    child: InkWell(
+                        child: Text(
+                          "Login",
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        onTap: () {
+                          if (formKey.currentState!.validate()) {
+                            print("Email: ${emailController.text}");
+                            print("Password: ${passwordController.text}");
+                          }
+                        }),
                   ),
                 ),
               ),
@@ -193,10 +217,14 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ],
               ),
-              SizedBox(height: 30,),
+              SizedBox(
+                height: 30,
+              ),
               Row(
                 children: [
-                  SizedBox(width: 70,),
+                  SizedBox(
+                    width: 70,
+                  ),
                   Padding(
                     padding: const EdgeInsets.all(15.0),
                     child: Container(
@@ -210,7 +238,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          SizedBox(width: 30,),
+                          SizedBox(
+                            width: 30,
+                          ),
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 10.0),
                             child: Image.network(
@@ -244,7 +274,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          SizedBox(width: 25,),
+                          SizedBox(
+                            width: 25,
+                          ),
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 10.0),
                             child: Image.network(
@@ -264,19 +296,34 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ],
               ),
-              SizedBox(height: 70,),
+              SizedBox(
+                height: 70,
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Don't have an account?",style: TextStyle(fontSize: 20,),),
-                  TextButton(onPressed: (){
-                    setState(() {
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Secondscreen()));
-                    });
-                  }, child: Text("Register",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.lightGreen),))
+                  Text(
+                    "Don't have an account?",
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
+                  ),
+                  TextButton(
+                      onPressed: () {
+                        setState(() {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => Secondscreen()));
+                        });
+                      },
+                      child: Text(
+                        "Register",
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.lightGreen),
+                      ))
                 ],
               ),
-        
             ],
           ),
         ),
